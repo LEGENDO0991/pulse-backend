@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken"
 import User from "../models/user.js"
 
 export const isAuthenticated = async (req, res, next) => {
-    const authorization = req.headers.authorization
+    try{const authorization = req.headers.authorization
     const token = authorization.split(" ")[1]
     if (!authorization) {
         return res.status(403).json({
@@ -34,4 +34,7 @@ export const isAuthenticated = async (req, res, next) => {
         _id: user._id
     }
     next()
+    } catch(err){
+        res.status(500).json({message:"Something went wrong"})
+    }
 }
