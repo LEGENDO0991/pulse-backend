@@ -56,9 +56,10 @@ export const upVote = async (req, res) => {
         // Remove any existing downvote for the same opinion
         const wasDownVoted = await DownVoteOpinion.deleteOne({ user: userId, opinion: opinionId }, { session });
         if (wasDownVoted.deletedCount > 0) {
-            await Opinion.findByIdAndUpdate(opinionId, {
-                $inc: { downVotes: -1 }
-            })
+           await Opinion.findByIdAndUpdate(opinionId,
+                { $inc: { downVotes: -1 } },
+                { session }
+            )
         }
         // Increment `upVotes` count in the Opinion model within the transaction
         await Opinion.findByIdAndUpdate(
