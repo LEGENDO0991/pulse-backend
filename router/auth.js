@@ -7,7 +7,11 @@ const limiter = rateLimit({
     limit: 5,
     standardHeaders: true,
     legacyHeaders: false,
-    message:"Too many attempts please try again after 5 minutes"
+    message:{
+        error: "Too Many Requests",
+        message: "Too many attempts please try again after 5 minutes.",
+        retry_after: 300
+    }
 })
 
 export default (router) => {
