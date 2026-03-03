@@ -11,7 +11,7 @@ const sendEmail = async (
             service: 'gmail',
             host: 'smtp.gmail.com',
             port: 587,
-            secure: false,
+            secure: true,
             auth: {
                 user: process.env.GMAIL,
                 pass: process.env.GMAIL_PASSWORD,
@@ -33,3 +33,4 @@ const sendEmail = async (
 }
 
 export default sendEmail
+
