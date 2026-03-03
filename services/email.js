@@ -7,16 +7,26 @@ const sendEmail = async (
     cb
 ) => {
     try {
+        // const transporter = nodemailer.createTransport({
+        //     service: 'gmail',
+        //     // host: 'smtp.gmail.com',
+        //     // port: 587,
+        //     // secure: true,
+        //     auth: {
+        //         user: process.env.GMAIL,
+        //         pass: process.env.GMAIL_PASSWORD,
+        //     },
+        // })
+
         const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            // host: 'smtp.gmail.com',
-            // port: 587,
-            // secure: true,
-            auth: {
-                user: process.env.GMAIL,
-                pass: process.env.GMAIL_PASSWORD,
+          host: "smtp-relay.brevo.com",
+          port: 587,
+          secure: false, // true only for port 465
+          auth: {
+            user: process.env.BREVO_LOGIN,   // example: abc123@smtp-brevo.com
+            pass: process.env.BREVO_PASSWORD,
             },
-        })
+        });
 
         const mailOptions = {
             from: 'WellnessX@email.com',
@@ -33,5 +43,6 @@ const sendEmail = async (
 }
 
 export default sendEmail
+
 
 
