@@ -7,29 +7,31 @@ client.setApiKey(
   process.env.BREVO_API_KEY
 );
 
-const sender = {
-  email: process.env.EMAIL_SENDER, // must be verified in Brevo
-  name: "Pulse",
-};
-
-export const sendEmail = async ({ to, subject, html }) => {
+const sendEmail = async (
+  { to, subject, message },
+  cb
+) => {
   try {
     const payload = {
-      sender,
-      to, // must be array [{ email: "...", name?: "..." }]
+      sender: {
+        email: process.env.EMAIL_SENDER, // must be verified
+        name: "Pulse",
+      },
+      to: [
+        {
+          email: to, // keep same format as old file (string)
+        },
+      ],
       subject,
-      htmlContent: html,
+      textContent: message, // same as old: plain text
     };
 
-    const response = await client.sendTransacEmail(payload);
-    return response;
-  } catch (error) {
-    console.error(
-      "Brevo error:",
-      error.response?.body || error.message
-    );
-    throw new Error("Email sending failed");
+    await client.sendTransacEmail(payload);
+
+  } catch (e) {
+    console.log("Brevo error:", e.response?.body || e.message);
+    if (cb) cb();
   }
 };
 
-
+export default sendEmail;
