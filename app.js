@@ -5,7 +5,7 @@ import cors from "cors";
 import mongoSanitize from 'express-mongo-sanitize';
 
 const app = express()
-
+app.set('trust proxy', 1);
 app.use(cors())
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -27,3 +27,4 @@ app.get('/', (req, res) => {
 })
 app.get('*', (req, res) => res.status(404))
 export default app
+
