@@ -1,48 +1,35 @@
-import nodemailer from 'nodemailer'
+import SibApiV3Sdk from "@getbrevo/brevo";
 
-const sendEmail = async (
-    { to,
-        subject,
-        message },
-    cb
-) => {
-    try {
-        // const transporter = nodemailer.createTransport({
-        //     service: 'gmail',
-        //     // host: 'smtp.gmail.com',
-        //     // port: 587,
-        //     // secure: true,
-        //     auth: {
-        //         user: process.env.GMAIL,
-        //         pass: process.env.GMAIL_PASSWORD,
-        //     },
-        // })
+const client = new SibApiV3Sdk.TransactionalEmailsApi();
 
-        const transporter = nodemailer.createTransport({
-          host: "smtp-relay.brevo.com",
-          port: 587,
-          secure: false, // true only for port 465
-          auth: {
-            user: process.env.BREVO_LOGIN,   // example: abc123@smtp-brevo.com
-            pass: process.env.BREVO_PASSWORD,
-            },
-        });
+client.setApiKey(
+  SibApiV3Sdk.TransactionalEmailsApiApiKeys.apiKey,
+  process.env.BREVO_API_KEY
+);
 
-        const mailOptions = {
-            from: 'WellnessX@email.com',
-            to,
-            subject,
-            text: message,
-        }
+const sender = {
+  email: process.env.EMAIL_SENDER, // must be verified in Brevo
+  name: "Pulse",
+};
 
-        await transporter.sendMail(mailOptions)
-    } catch (e) {
-        console.log(e)
-        cb()
-    }
-}
+export const sendEmail = async ({ to, subject, html }) => {
+  try {
+    const payload = {
+      sender,
+      to, // must be array [{ email: "...", name?: "..." }]
+      subject,
+      htmlContent: html,
+    };
 
-export default sendEmail
-
+    const response = await client.sendTransacEmail(payload);
+    return response;
+  } catch (error) {
+    console.error(
+      "Brevo error:",
+      error.response?.body || error.message
+    );
+    throw new Error("Email sending failed");
+  }
+};
 
 
