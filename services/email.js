@@ -7,33 +7,35 @@ client.setApiKey(
   process.env.BREVO_API_KEY
 );
 
-const sendEmail = async (
-  { to, subject, message },
-  cb
-) => {
+const sendEmail = async ({ to, subject, message }, cb) => {
   try {
+    const missing = [];
+
+    if (!to) missing.push("to");
+    if (!subject) missing.push("subject");
+    if (!message) missing.push("message");
+
+    if (missing.length) {
+      console.error("Email missing fields:", missing.join(", "));
+      throw new Error("Missing email fields");
+    }
+
     const payload = {
       sender: {
-        email: process.env.EMAIL_SENDER, // must be verified
+        email: process.env.EMAIL_SENDER,
         name: "Pulse",
       },
-      to: [
-        {
-          email: to, // keep same format as old file (string)
-        },
-      ],
+      to: [{ email: to }],
       subject,
-      textContent: message, // same as old: plain text
+      textContent: message,
     };
 
     await client.sendTransacEmail(payload);
 
   } catch (e) {
-    console.log("Brevo error:", e.response?.body || e.message);
-    console.log(e);
-    if (cb) cb();
+    console.error("Brevo error:", e.response?.body || e.message);
+    if (cb) cb(e);
   }
 };
 
 export default sendEmail;
-
