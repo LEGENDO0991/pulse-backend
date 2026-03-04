@@ -70,7 +70,8 @@ export const login = async (req, res, next) => {
 
     sendEmail({
         to: email,
-        message: `Your otp for sign Up is ${otp}`
+        message: `Your otp for sign Up is ${otp}`,
+        subjectL: "OTP for log in"
     }, () => console.log("Error in sending email"))
 
     res.status(200).json({
@@ -110,4 +111,5 @@ export const verifyOtp = async (req, res, next) => {
 
 export const checkAuth = async (req, res) => {
     return res.status(200).json({ user: req.user})
+
 }
