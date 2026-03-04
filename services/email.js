@@ -30,8 +30,10 @@ const sendEmail = async (
 
   } catch (e) {
     console.log("Brevo error:", e.response?.body || e.message);
+    console.log(e);
     if (cb) cb();
   }
 };
 
 export default sendEmail;
+
