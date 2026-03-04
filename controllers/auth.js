@@ -32,7 +32,7 @@ export const register = async (req, res, next) => {
     sendEmail({
         to: email,
         message: `Your otp for sign Up is ${otp}`,
-        subjectL: "OTP for sign up"
+        subject: "OTP for sign up"
     })
 
     res.status(200).json({
@@ -71,7 +71,7 @@ export const login = async (req, res, next) => {
     sendEmail({
         to: email,
         message: `Your otp for sign Up is ${otp}`,
-        subjectL: "OTP for log in"
+        subject: "OTP for log in"
     }, () => console.log("Error in sending email"))
 
     res.status(200).json({
@@ -113,3 +113,4 @@ export const checkAuth = async (req, res) => {
     return res.status(200).json({ user: req.user})
 
 }
+
